@@ -28,14 +28,13 @@ stages:
         - script: python --version
         - script: mvn --version
         - script: ls -R $(Build.ArtifactStagingDirectory)
+        - task: CopyFiles@2
+          inputs:
+            SourceFolder: '$(System.DefaultWorkingDirectory)'
+            Contents: |
+              **/*.yml
+              **/*.tf
+            TargetFolder: '$(Build.ArtifactStagingDirectory)'
           displayName: 'Run first step in job1'
-
-        - script: |
-            echo Add other tasks to build, test, and deploy your project.
-            echo This is step 2  in  job1
-          displayName: 'Run second step which contains multiple lines in job1'
-
-      - job: job2
-        steps:
-          - script: echo This is a step job2 under $(env)
-            displayName: 'Run first step in job2'
+        - script: echo after copying the files
+        - script: ls -R $(Build.ArtifactStagingDirectory)
