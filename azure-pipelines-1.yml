@@ -21,6 +21,9 @@ stages:
           platform: 'x64'  
         steps:
         - script: echo "building in $(configuration) mode for $(platform) under $(env)"
+        - script: echo Build id is $(Build.BuildId)
+        - script: echo working directory is $(System.DefaultWorkingDirectory)
+        - script: echo staging directory is $(Build.ArtifactStagingDirectory)
           displayName: 'Run first step in job1'
 
         - script: |
@@ -56,4 +59,4 @@ stages:
     jobs:
       - job: ProdDeployJob
         steps:
-        - script: echo this is ProdDeployJob    
+        - script: echo this is ProdDeployJob
