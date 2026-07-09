@@ -38,3 +38,11 @@ stages:
           displayName: 'Run first step in job1'
         - script: echo after copying the files
         - script: ls -R $(Build.ArtifactStagingDirectory)
+        - script: echo publishing
+        - task: PublishBuildArtifacts@1
+          inputs:
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+            ArtifactName: 'drop'
+            publishLocation: 'Container'
+
+      
