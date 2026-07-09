@@ -10,14 +10,17 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 stages:
+  
   - stage: Build
+    variables:
+      env: 'docker-env 1'
     jobs:
       - job: job1
         variables:
           configuration: 'java-11 config'
           platform: 'x64'  
         steps:
-        - script: echo "building in $(configuration) mode for $(platform)"
+        - script: echo "building in $(configuration) mode for $(platform) under $(env)"
           displayName: 'Run first step in job1'
 
         - script: |
@@ -27,7 +30,7 @@ stages:
 
       - job: job2
         steps:
-          - script: echo This is a step job2
+          - script: echo This is a step job2 under $(env)
             displayName: 'Run first step in job2'
 
   - stage: DevDeploy
@@ -53,4 +56,4 @@ stages:
     jobs:
       - job: ProdDeployJob
         steps:
-        - script: echo this is ProdDeployJob
+        - script: echo this is ProdDeployJob    
