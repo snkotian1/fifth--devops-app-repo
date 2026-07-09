@@ -1,1 +1,37 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
 
+trigger:
+- main
+
+
+pool:
+  vmImage: ubuntu-latest
+stages:
+  
+  - stage: Build
+    variables:
+      env: 'docker-env 1'
+    jobs:
+      - job: job1
+        variables:
+          configuration: 'java-11 config'
+          platform: 'x64'  
+        steps:
+        - script: echo "building in $(configuration) mode for $(platform) under $(env)"
+        - script: echo Build id is $(Build.BuildId)
+        - script: echo working directory is $(System.DefaultWorkingDirectory)
+        - script: echo staging directory is $(Build.ArtifactStagingDirectory)
+          displayName: 'Run first step in job1'
+
+        - script: |
+            echo Add other tasks to build, test, and deploy your project.
+            echo This is step 2  in  job1
+          displayName: 'Run second step which contains multiple lines in job1'
+
+      - job: job2
+        steps:
+          - script: echo This is a step job2 under $(env)
+            displayName: 'Run first step in job2'
