@@ -6,8 +6,14 @@
 trigger:
 - main
 
+pool:
+  vmImage: 'ubuntu-latest'
 
-
+variables:
+  dockerConnection: 'docker-hub-connection'
+  imageRepository: 'psubbudocker/azuredevopsrepo'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  tag: '$(Build.BuildId)'
 stages:
   
   - stage: Build
@@ -15,21 +21,9 @@ stages:
       - job: BuildJob
         steps:
           - bash: echo "Do the Build"
-  - stage: DevDeploy
-    jobs:
-      - deployment: DevDeployJob
-        environment: Dev
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - script: echo deploy to Dev
-  - stage: QADeploy
-    jobs:
-      - deployment: QADeployJob
-        environment: QA
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - script: echo deploy to QA 
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'docker-hub-connection'
+              repository: 'skotian1/azuredevopsrepo'
+              command: 'buildAndPush'
+              Dockerfile: '**/Dockerfile'
