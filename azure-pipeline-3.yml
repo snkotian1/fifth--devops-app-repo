@@ -1,1 +1,48 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
 
+trigger:
+- main
+
+
+pool:
+  vmImage: ubuntu-latest
+stages:
+  
+  - stage: Build
+    variables:
+      env: 'docker-env 1'
+    jobs:
+      - job: job1
+        variables:
+          configuration: 'java-11 config'
+          platform: 'x64'  
+        steps:
+        - script: echo "building in $(configuration) mode for $(platform) under $(env)"
+        - script: echo Build id is $(Build.BuildId)
+        - script: echo working directory is $(System.DefaultWorkingDirectory)
+        - script: echo staging directory is $(Build.ArtifactStagingDirectory)
+        - script: java -version
+        - script: python --version
+        - script: mvn --version
+        - script: ls -R $(Build.ArtifactStagingDirectory)
+        - task: CopyFiles@2
+          inputs:
+            SourceFolder: '$(System.DefaultWorkingDirectory)'
+            Contents: |
+              **/*.yml
+              **/*.tf
+            TargetFolder: '$(Build.ArtifactStagingDirectory)'
+          displayName: 'Run first step in job1'
+        - script: echo after copying the files
+        - script: ls -R $(Build.ArtifactStagingDirectory)
+        - script: echo publishing
+        - task: PublishBuildArtifacts@1
+          inputs:
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+            ArtifactName: 'drop'
+            publishLocation: 'Container'
+
+      
