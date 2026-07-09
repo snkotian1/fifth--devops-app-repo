@@ -7,8 +7,7 @@ trigger:
 - main
 
 
-pool:
-  vmImage: ubuntu-latest
+
 stages:
   
   - stage: Build
@@ -16,6 +15,17 @@ stages:
       env: 'docker-env 1'
     jobs:
       - job: job1
+        
+        strategy:
+          matrix:
+            linux:
+              operatingSystem: 'ubuntu-latest'
+            mac:
+              operatingSystem: 'macos-latest' 
+            windows:
+              operatingSystem: 'windows-latest'   
+        pool:
+         vmImage: $(operatingSystem)   
         variables:
           configuration: 'java-11 config'
           platform: 'x64'  
@@ -36,13 +46,11 @@ stages:
               **/*.tf
             TargetFolder: '$(Build.ArtifactStagingDirectory)'
           displayName: 'Run first step in job1'
-        - script: echo after copying the files
-        - script: ls -R $(Build.ArtifactStagingDirectory)
+        - script: echo after copying the files 
+        - script: ls -R $(Build.ArtifactStagingDirectory) 
         - script: echo publishing
         - task: PublishBuildArtifacts@1
           inputs:
             PathtoPublish: '$(Build.ArtifactStagingDirectory)'
             ArtifactName: 'drop'
             publishLocation: 'Container'
-
-      
