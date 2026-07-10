@@ -9,21 +9,9 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-variables:
-  dockerConnection: 'docker-hub-connection'
-  imageRepository: 'psubbudocker/azuredevopsrepo'
-  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
-  tag: '$(Build.BuildId)'
-stages:
-  
-  - stage: Build
     jobs:
-      - job: BuildJob
+      - job: job1
         steps:
-          - bash: echo "Do the Build"
-          - task: Docker@2
-            inputs:
-              containerRegistry: 'docker-hub-connection'
-              repository: 'skotian1/azuredevopsrepo'
-              command: 'buildAndPush'
-              Dockerfile: '**/Dockerfile'
+          - script: echo Hello"Do the Build"
+          
+
