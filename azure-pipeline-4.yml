@@ -7,14 +7,27 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: ubuntu-latest
 
-    jobs:
-      - job: job1
-        steps:
-        - script: echo terraform task 
-        
+jobs:
+  - job: job1
+    steps:
+    - script: echo terraform task
 
+    - task: DownloadSecureFile@1
+      name: publickey
+      inputs:
+        secureFile: 'id_rsa.pub'
 
-          
-
+      
+    - task: TerraformTask@5
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
+        commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret)  -var ssh_public_key=$(publickey.secureFile)'
+        backendServiceArm: 'test-azure-service-connection'
+        backendAzureRmResourceGroupName: 'user131_rg'
+        backendAzureRmStorageAccountName: 'storagefordevops'
+        backendAzureRmContainerName: 'containerfordevops'
+        backendAzureRmKey: 'tf/terraform.tfstate'
