@@ -12,6 +12,9 @@ pool:
     jobs:
       - job: job1
         steps:
-          - script: echo Hello"Do the Build"
+        - script: echo terraform task 
+        
+
+
           
 
