@@ -29,10 +29,13 @@ resource "azurerm_kubernetes_cluster" "terraform-k8s" {
     # vm_size         = "standard_d2as_v5"      CHANGE IF AN ERROR ARISES 
   }
 
-  service_principal {
-    client_id     = var.client_id
-    client_secret = var.client_secret
-  }
+#  service_principal {
+#   client_id     = var.client_id
+#    client_secret = var.client_secret
+# }
+identity{
+ type="SystemAssigned"
+}
 
   tags = {
     Environment = var.environment
